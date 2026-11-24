@@ -1,0 +1,59 @@
+{% extends "panel/base.html" %}
+{% block title %}Inquiries{% endblock %}
+{% block heading %}Inquiries{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <nav class="tabs" aria-label="Filter by status">
+    {% for t in tabs %}
+    <a href="?status={{ t.value }}{% if q %}&q={{ q|urlencode }}{% endif %}" class="{% if status == t.value %}active{% endif %}">
+      {{ t.label }} <span class="count">{{ t.count }}</span>
+    </a>
+    {% endfor %}
+  </nav>
+  <form class="search" method="get" role="search">
+    {% if status %}<input type="hidden" name="status" value="{{ status }}">{% endif %}
+    <input type="search" name="q" value="{{ q }}" placeholder="Search name, email, phone, cargo…" aria-label="Search inquiries">
+    <button type="submit" class="btn btn-ghost btn-sm">Search</button>
+  </form>
+</div>
+
+{% if inquiries %}
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr><th>Received</th><th>Name</th><th>Contact</th><th>Shipping</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for i in inquiries %}
+      <tr class="row-link{% if i.status == 'new' %} is-new{% endif %}">
+        <td class="nowrap mono" data-label="Received">{{ i.created_at|date:"d M Y, H:i" }}</td>
+        <td data-label="Name"><a class="row-anchor" href="{% url 'panel:inquiry_detail' i.pk %}">{{ i.name }}</a></td>
+        <td data-label="Contact"><div>{{ i.email }}</div>{% if i.phone %}<div class="muted">{{ i.phone }}</div>{% endif %}</td>
+        <td class="clip" data-label="Shipping">{{ i.message|truncatechars:90 }}</td>
+        <td data-label="Status"><span class="badge badge-{{ i.status }}">{{ i.get_status_display }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if is_paginated %}
+<nav class="pager" aria-label="Pages">
+  {% if page_obj.has_previous %}<a class="btn btn-ghost btn-sm" href="?page={{ page_obj.previous_page_number }}&status={{ status }}&q={{ q|urlencode }}">← Newer</a>{% endif %}
+  <span class="muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a class="btn btn-ghost btn-sm" href="?page={{ page_obj.next_page_number }}&status={{ status }}&q={{ q|urlencode }}">Older →</a>{% endif %}
+</nav>
+{% endif %}
+
+{% else %}
+<div class="empty">
+  {% if q or status %}
+  <b>No inquiries match.</b>
+  <p><a href="{% url 'panel:inquiries' %}">Clear filters</a></p>
+  {% else %}
+  <b>No inquiries yet.</b>
+  <p>Requests sent from the website's quote form will appear here.</p>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

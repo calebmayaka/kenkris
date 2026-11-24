@@ -1,0 +1,28 @@
+{% extends "panel/base.html" %}
+{% block title %}Site settings{% endblock %}
+{% block heading %}Site settings{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <h2>Header</h2>
+    {% include "panel/_field.html" with field=form.header_phone %}
+    {% include "panel/_field.html" with field=form.whatsapp_number %}
+
+    <h2 class="mt">Contact details</h2>
+    <p class="muted small">Shown in the Contact section and the footer.</p>
+    {% include "panel/_field.html" with field=form.contact_phone %}
+    {% include "panel/_field.html" with field=form.contact_email %}
+    {% include "panel/_field.html" with field=form.contact_address %}
+    {% include "panel/_field.html" with field=form.contact_hours %}
+
+    <h2 class="mt">Quote notifications</h2>
+    {% include "panel/_field.html" with field=form.quote_notify_email %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save settings</button>
+      <a class="btn btn-ghost" href="/" target="_blank" rel="noopener">View website ↗</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

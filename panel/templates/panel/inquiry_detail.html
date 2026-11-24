@@ -1,0 +1,37 @@
+{% extends "panel/base.html" %}
+{% block title %}{{ inquiry.name }} · Inquiries{% endblock %}
+{% block breadcrumb %}<a class="crumb" href="{% url 'panel:inquiries' %}">← All inquiries</a>{% endblock %}
+{% block heading %}{{ inquiry.name }}{% endblock %}
+{% block actions %}<span class="badge badge-{{ inquiry.status }}">{{ inquiry.get_status_display }}</span>{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <section class="card">
+    <h2>Request</h2>
+    <dl class="facts">
+      <div><dt>Received</dt><dd>{{ inquiry.created_at|date:"l, d F Y \a\t H:i" }}</dd></div>
+      <div><dt>Email</dt><dd><a href="mailto:{{ inquiry.email }}">{{ inquiry.email }}</a></dd></div>
+      <div><dt>Phone</dt><dd>{{ inquiry.phone|default:"—" }}</dd></div>
+    </dl>
+    <h3>What are they shipping?</h3>
+    <div class="message">{{ inquiry.message|linebreaksbr }}</div>
+
+    <div class="contact-actions">
+      <a class="btn btn-primary btn-sm" href="mailto:{{ inquiry.email }}?subject={{ 'Your quote request — KenKris Logistics'|urlencode }}">Reply by email</a>
+      {% if phone_digits %}
+      <a class="btn btn-ghost btn-sm" href="tel:+{{ phone_digits }}">Call</a>
+      <a class="btn btn-whatsapp-sm btn-sm" href="https://wa.me/{{ phone_digits }}" target="_blank" rel="noopener">WhatsApp</a>
+      {% endif %}
+    </div>
+    <p class="muted small">Email notification: {% if inquiry.email_sent %}sent to the office{% else %}not sent{% endif %}{% if inquiry.ip_address %} · IP {{ inquiry.ip_address }}{% endif %}</p>
+  </section>
+
+  <section class="card">
+    <h2>Follow-up</h2>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}{% include "panel/_field.html" %}{% endfor %}
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

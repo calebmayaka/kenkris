@@ -1,0 +1,20 @@
+{% extends "panel/base.html" %}
+{% block title %}{% if creating %}New {{ noun }}{% else %}Edit {{ noun }}{% endif %}{% endblock %}
+{% block breadcrumb %}<a class="crumb" href="{% url list_url %}">← Back</a>{% endblock %}
+{% block heading %}{% if creating %}New {{ noun }}{% else %}Edit {{ noun }}{% endif %}{% endblock %}
+{% block content %}
+<section class="card narrow">
+  {% if form.non_field_errors %}<div class="alert alert-error" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}{% include "panel/_field.html" %}{% endfor %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{% if creating %}Add {{ noun }}{% else %}Save changes{% endif %}</button>
+      <a class="btn btn-ghost" href="{% url list_url %}">Cancel</a>
+      {% if not creating %}
+      <a class="btn btn-danger-link" href="{% url 'panel:'|add:noun|add:'_delete' object.pk %}">Delete</a>
+      {% endif %}
+    </div>
+  </form>
+</section>
+{% endblock %}

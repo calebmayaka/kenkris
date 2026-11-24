@@ -1,0 +1,33 @@
+{% extends "panel/base.html" %}
+{% block title %}{% if creating %}New user{% else %}Edit {{ target.username }}{% endif %}{% endblock %}
+{% block breadcrumb %}<a class="crumb" href="{% url 'panel:users' %}">← All users</a>{% endblock %}
+{% block heading %}{% if creating %}New user{% else %}Edit {{ target.get_full_name|default:target.username }}{% endif %}{% endblock %}
+{% block content %}
+<section class="card narrow">
+  {% if form.non_field_errors %}<div class="alert alert-error" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="field-row">
+      {% include "panel/_field.html" with field=form.first_name %}
+      {% include "panel/_field.html" with field=form.last_name %}
+    </div>
+    {% if creating %}{% include "panel/_field.html" with field=form.username %}{% else %}
+    <div class="field"><span class="label">Username</span><div class="mono">{{ target.username }}</div></div>
+    {% endif %}
+    {% include "panel/_field.html" with field=form.email %}
+    {% include "panel/_field.html" with field=form.role %}
+    {% if creating %}
+    <div class="field-row">
+      {% include "panel/_field.html" with field=form.password1 %}
+      {% include "panel/_field.html" with field=form.password2 %}
+    </div>
+    {% else %}
+    {% include "panel/_field.html" with field=form.is_active %}
+    {% endif %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{% if creating %}Create user{% else %}Save changes{% endif %}</button>
+      <a class="btn btn-ghost" href="{% url 'panel:users' %}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

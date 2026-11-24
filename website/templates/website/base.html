@@ -1,0 +1,113 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en-KE">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Customs Clearing Agent in Nairobi &amp; Mombasa | Freight Forwarding Kenya – KenKris Logistics{% endblock %}</title>
+  <meta name="description" content="{% block description %}Licensed customs clearing and freight forwarding in Kenya. KRA clearance, sea, air &amp; road freight, bonded transit to Uganda, Rwanda, DRC and South Sudan. Get a quote in one business day.{% endblock %}">
+  {% block robots %}<meta name="robots" content="index, follow, max-image-preview:large">{% endblock %}
+  <link rel="canonical" href="{{ SITE_URL }}{% block canonical_path %}/{% endblock %}">
+  <meta name="theme-color" content="#0B2452">
+
+  <!-- Social previews (WhatsApp, Facebook, LinkedIn, X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KenKris Logistics">
+  <meta property="og:locale" content="en_KE">
+  <meta property="og:title" content="KenKris Logistics — Customs Clearing &amp; Freight Forwarding in Kenya">
+  <meta property="og:description" content="Customs brokerage, freight forwarding and cargo handling from Mombasa and Nairobi across East and Central Africa.">
+  <meta property="og:url" content="{{ SITE_URL }}/">
+  <meta property="og:image" content="{{ SITE_URL }}{% static 'website/img/og-image.png' %}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="KenKris Logistics — Cargo from anywhere, cleared, moved, delivered">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="KenKris Logistics — Customs Clearing &amp; Freight Forwarding in Kenya">
+  <meta name="twitter:description" content="Customs brokerage, freight forwarding and cargo handling across East and Central Africa.">
+  <meta name="twitter:image" content="{{ SITE_URL }}{% static 'website/img/og-image.png' %}">
+
+  <!-- Icons -->
+  <link rel="icon" href="{% static 'website/favicon.svg' %}" type="image/svg+xml">
+  <link rel="icon" href="{% static 'website/img/favicon.ico' %}" sizes="48x48">
+  <link rel="apple-touch-icon" href="{% static 'website/img/apple-touch-icon.png' %}">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <link rel="preload" href="{% static 'website/fonts/inter-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'website/fonts/space-grotesk-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'website/css/site.css' %}">
+  {% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "{{ SITE_URL }}/#organization",
+        "name": "KenKris Logistics Limited",
+        "alternateName": "KenKris Logistics",
+        "url": "{{ SITE_URL }}/",
+        "logo": "{{ SITE_URL }}{% static 'website/img/icon-512.png' %}",
+        "slogan": "Your global cargo partner",
+        "email": "{{ site.contact_email|escapejs }}",
+        "telephone": "{{ site.header_phone|escapejs }}"
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "{{ SITE_URL }}/#business",
+        "name": "KenKris Logistics",
+        "parentOrganization": {"@id": "{{ SITE_URL }}/#organization"},
+        "description": "Customs brokerage, freight forwarding, cargo handling and trade training for importers and exporters across East and Central Africa.",
+        "url": "{{ SITE_URL }}/",
+        "image": "{{ SITE_URL }}{% static 'website/img/og-image.png' %}",
+        "logo": "{{ SITE_URL }}{% static 'website/img/icon-512.png' %}",
+        "telephone": "{{ site.header_phone|escapejs }}",
+        "email": "{{ site.contact_email|escapejs }}",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "{{ site.contact_address|escapejs }}",
+          "addressLocality": "Nairobi",
+          "addressCountry": "KE"
+        },
+        "openingHoursSpecification": [{
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "08:00",
+          "closes": "18:00"
+        }],
+        "areaServed": [
+          {"@type": "Country", "name": "Kenya"},
+          {"@type": "Country", "name": "Uganda"},
+          {"@type": "Country", "name": "Rwanda"},
+          {"@type": "Country", "name": "Burundi"},
+          {"@type": "Country", "name": "Democratic Republic of the Congo"},
+          {"@type": "Country", "name": "South Sudan"},
+          {"@type": "Country", "name": "Tanzania"}
+        ],
+        "knowsAbout": ["Customs clearance", "Freight forwarding", "Bonded transit", "HS classification", "KRA iCMS", "Import documentation"],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Logistics services",
+          "itemListElement": [
+            {% for svc in services %}{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "{{ svc.title|escapejs }}", "description": "{{ svc.desc|escapejs }}"}},
+            {% endfor %}{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Trade & customs training", "description": "Short courses on customs compliance, documentation and regional trade rules."}}
+          ]
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "{{ SITE_URL }}/#website",
+        "url": "{{ SITE_URL }}/",
+        "name": "KenKris Logistics",
+        "publisher": {"@id": "{{ SITE_URL }}/#organization"},
+        "inLanguage": "en-KE"
+      }
+    ]
+  }
+  </script>
+  {% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% block body %}{% endblock %}
+  <script src="{% static 'website/js/site.js' %}" defer></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "website/base.html" %}
+{% block title %}Page not found – KenKris Logistics{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+{% block structured_data %}{% endblock %}
+{% block body %}
+<main id="main" class="hero error-page">
+  <div class="container">
+    <div class="eyebrow eyebrow-light">Error 404</div>
+    <h1>This page has <span class="accent-light">gone off-route</span></h1>
+    <p class="hero-lead">The page you're looking for doesn't exist or has moved. Let's get you back on track.</p>
+    <div class="btn-row">
+      <a href="/" class="btn btn-primary">Back to homepage</a>
+      <a href="/#contact" class="btn btn-ghost">Contact us</a>
+    </div>
+  </div>
+</main>
+{% endblock %}

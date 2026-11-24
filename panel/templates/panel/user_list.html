@@ -1,0 +1,29 @@
+{% extends "panel/base.html" %}
+{% block title %}Users{% endblock %}
+{% block heading %}Users{% endblock %}
+{% block actions %}<a class="btn btn-primary btn-sm" href="{% url 'panel:user_create' %}">+ New user</a>{% endblock %}
+{% block content %}
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Last sign-in</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr class="{% if not u.is_active %}is-muted{% endif %}">
+        <td data-label="Name"><b>{{ u.get_full_name|default:"—" }}</b>{% if u == request.user %} <span class="muted">(you)</span>{% endif %}</td>
+        <td class="mono" data-label="Username">{{ u.username }}</td>
+        <td data-label="Email">{{ u.email|default:"—" }}</td>
+        <td data-label="Role">{% if u.is_superuser %}<span class="badge badge-admin">Administrator</span>{% elif u.is_staff %}<span class="badge badge-staff">Staff</span>{% else %}<span class="badge badge-closed">No panel access</span>{% endif %}</td>
+        <td data-label="Status">{% if u.is_active %}Active{% else %}<span class="muted">Deactivated</span>{% endif %}</td>
+        <td class="nowrap mono" data-label="Last sign-in">{{ u.last_login|date:"d M Y, H:i"|default:"Never" }}</td>
+        <td class="nowrap actions-cell">
+          <a href="{% url 'panel:user_edit' u.pk %}">Edit</a>
+          <a href="{% url 'panel:user_password' u.pk %}">Set password</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,348 @@
+{% extends "website/base.html" %}
+{% block body %}
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#top" class="brand" aria-label="KenKris Logistics home">
+      <span class="brand-mark" aria-hidden="true"><span></span></span>
+      <span class="brand-text">
+        <span class="brand-name">KenKris <span class="accent">Logistics</span></span>
+        <span class="brand-tagline">Your global cargo partner</span>
+      </span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <a href="#services">Services</a>
+      <a href="#journey">How It Works</a>
+      <a href="#advisory">Training</a>
+      <a href="#coverage">Coverage</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-phone" href="{{ site.header_phone_href }}">{{ site.header_phone }}</a>
+      <a class="btn btn-primary btn-sm" href="#contact">Get a Quote</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section id="top" class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow eyebrow-light">Customs &amp; Freight, Handled</div>
+      <h1>Cargo from anywhere, <span class="accent-light">cleared, moved, delivered</span></h1>
+      <p class="hero-lead">Licensed customs clearing agents in Nairobi and Mombasa — customs brokerage, freight forwarding and cargo handling for importers and exporters across East and Central Africa.</p>
+      <div class="btn-row">
+        <a href="#contact" class="btn btn-primary">Request a Quote</a>
+        <a href="#services" class="btn btn-ghost">Our Services</a>
+        {% if site.whatsapp_url %}
+        <a class="btn-whatsapp" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp" title="Chat with us on WhatsApp">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        </a>
+        {% endif %}
+      </div>
+      {% if hero_stats %}
+      <dl class="hero-stats">
+        {% for s in hero_stats %}
+        <div><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>
+        {% endfor %}
+      </dl>
+      {% endif %}
+    </div>
+
+    <div class="tracker" aria-label="Example shipment journey">
+      <div class="tracker-head">
+        <div>Example shipment <b>#KK-20481</b></div>
+        <div class="tracker-live"><span class="pulse-dot"></span>Live</div>
+      </div>
+      <ol class="tracker-steps">
+        {% for step in tracker_steps %}
+        <li class="tracker-step is-{{ step.state }}">
+          <span class="tracker-dot">{% if step.state == "done" %}✓{% endif %}</span>
+          <div>
+            <div class="tracker-label">{{ step.label }}</div>
+            <div class="tracker-sub">{{ step.sub }}</div>
+          </div>
+          <div class="tracker-time">{{ step.time }}</div>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <ul class="container strip-inner">
+    {% for chip in strip_chips %}<li>{{ chip }}</li>{% endfor %}
+  </ul>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="section">
+  <div class="container">
+    <header class="section-head">
+      <div class="eyebrow">What We Do</div>
+      <h2>End-to-end cargo services</h2>
+      <p>From the port of origin to your warehouse door, we manage every step of the clearance and transport chain.</p>
+    </header>
+    <div class="grid grid-3">
+      {% for svc in services %}
+      <article class="card service-card">
+        <div class="icon-tile" aria-hidden="true">{{ svc.icon }}</div>
+        <h3>{{ svc.title }}</h3>
+        <p>{{ svc.desc }}</p>
+        <div class="mono-tag">{{ svc.tag }}</div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey" class="section section-warm bordered">
+  <div class="container">
+    <header class="section-head centered">
+      <div class="eyebrow">The Process</div>
+      <h2>From booking to delivery</h2>
+    </header>
+    <ol class="grid grid-5 journey">
+      {% for step in journey_steps %}
+      <li class="journey-step">
+        <span class="journey-num" aria-hidden="true">{{ step.num }}</span>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.desc }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<!-- TRAINING -->
+<section id="advisory" class="section section-navy">
+  <div class="container split split-even">
+    <div>
+      <div class="eyebrow eyebrow-light">Trade Training</div>
+      <h2>Building customs &amp; logistics know-how</h2>
+      <p class="lead-light">Short courses for importers, exporters and clearing staff who want to understand the paperwork before it costs them.</p>
+      <div class="feature-list">
+        {% for f in features %}
+        <div class="feature">
+          <div class="feature-icon" aria-hidden="true">{{ f.icon }}</div>
+          <div>
+            <h3>{{ f.title }}</h3>
+            <p>{{ f.desc }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="courses-card">
+      <div class="mono-label">Upcoming Courses</div>
+      <h3>Trade &amp; Customs Academy</h3>
+      {% if courses %}
+      <ul class="course-list">
+        {% for c in courses %}
+        <li><b>{{ c.name }}</b><time datetime="{{ c.start_date|date:'Y-m-d' }}">{{ c.start_date|date:"M d" }}</time></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="muted">New course dates are coming soon. <a class="link" href="#contact">Ask us</a> about the next intake or in-house training for your team.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="section">
+  <div class="container split split-why">
+    <dl class="grid grid-2 stats">
+      {% for s in stats %}
+      <div class="card stat"><dt>{{ s.label }}</dt><dd>{{ s.value }}</dd></div>
+      {% endfor %}
+    </dl>
+    <div>
+      <div class="eyebrow">Why KenKris</div>
+      <h2>A single point of contact for cargo, clearance and compliance</h2>
+      <ul class="check-list">
+        {% for pt in why_points %}<li>{{ pt }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- COVERAGE -->
+<section id="coverage" class="section section-warm-rev bordered-top">
+  <div class="container">
+    <header class="section-head tight">
+      <div class="eyebrow">Regional Reach</div>
+      <h2>Corridors we run every week</h2>
+    </header>
+    <div class="grid grid-4">
+      {% for c in corridors %}
+      <article class="card corridor">
+        <h3>{{ c.city }}</h3>
+        <div class="mono-tag orange">{{ c.role }}</div>
+        <p>{{ c.desc }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="transit-band">
+      <div>
+        <div class="mono-label orange-light">Goods In Transit</div>
+        <h3>Bonded transit to landlocked markets</h3>
+        <p>We escort and bond cargo moving onward from Mombasa and Nairobi to neighbouring markets.</p>
+      </div>
+      <ul class="destinations">
+        {% for d in destinations %}<li>{{ d }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- REQUIREMENTS -->
+<section class="section section-cream bordered-top">
+  <div class="container split split-req">
+    <div>
+      <div class="eyebrow">Before You Ship</div>
+      <h2 class="mb-lg">Documents we'll need from you</h2>
+      <ul class="card req-list">
+        {% for r in requirements %}
+        <li>
+          <span class="req-icon" aria-hidden="true">{{ r.icon }}</span>
+          <div><b>{{ r.title }}</b><span>{{ r.desc }}</span></div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <aside class="help-card">
+      <b>Not sure what applies to you?</b>
+      <p>Send us your invoice and packing list — we'll tell you exactly what's needed for clearance.</p>
+      <a href="#contact" class="btn btn-navy btn-sm">Ask Us</a>
+    </aside>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-wrap">
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2>Ready to move your cargo?</h2>
+        <p>Tell us what you're shipping and where — we'll handle clearance, transport and delivery.</p>
+      </div>
+      <a href="#contact" class="btn btn-white">Get a Quote</a>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+  <div class="container split split-even">
+    <div>
+      <div class="eyebrow">Get In Touch</div>
+      <h2 class="mb-md">Talk to our clearance team</h2>
+      <ul class="contact-list">
+        <li><span class="contact-icon" aria-hidden="true">📍</span><div><div class="mono-label muted-label">Office</div><div class="contact-value">{{ site.contact_address }}</div></div></li>
+        <li><span class="contact-icon" aria-hidden="true">📞</span><div><div class="mono-label muted-label">Phone</div><div class="contact-value">{{ site.contact_phone }}</div></div></li>
+        <li><span class="contact-icon" aria-hidden="true">✉️</span><div><div class="mono-label muted-label">Email</div><div class="contact-value"><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></div></div></li>
+        <li><span class="contact-icon" aria-hidden="true">🕒</span><div><div class="mono-label muted-label">Hours</div><div class="contact-value">{{ site.contact_hours }}</div></div></li>
+      </ul>
+    </div>
+
+    <div class="card form-card">
+      <h3>Request a Quote</h3>
+      <p class="muted">Tell us about your shipment and we'll respond within one business day.</p>
+
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}" role="status">{{ message }}</div>
+      {% endfor %}
+
+      {% if form.errors %}
+      <div class="alert alert-error" role="alert" id="form-errors">Please check the highlighted fields.</div>
+      {% endif %}
+
+      <form method="post" action="{% url 'website:submit_quote' %}" novalidate>
+        {% csrf_token %}
+        <div class="hp" aria-hidden="true">
+          <label for="id_website">Leave this empty</label>
+          <input type="text" name="website" id="id_website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="field{% if form.name.errors %} has-error{% endif %}">
+          <label for="{{ form.name.id_for_label }}">Full name</label>
+          {{ form.name }}
+          {% for e in form.name.errors %}<small class="error">{{ e }}</small>{% endfor %}
+        </div>
+        <div class="field-row">
+          <div class="field{% if form.email.errors %} has-error{% endif %}">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+            {% for e in form.email.errors %}<small class="error">{{ e }}</small>{% endfor %}
+          </div>
+          <div class="field{% if form.phone.errors %} has-error{% endif %}">
+            <label for="{{ form.phone.id_for_label }}">Phone</label>
+            {{ form.phone }}
+            {% for e in form.phone.errors %}<small class="error">{{ e }}</small>{% endfor %}
+          </div>
+        </div>
+        <div class="field{% if form.message.errors %} has-error{% endif %}">
+          <label for="{{ form.message.id_for_label }}">What are you shipping?</label>
+          {{ form.message }}
+          {% for e in form.message.errors %}<small class="error">{{ e }}</small>{% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send Request</button>
+        <div class="form-note">We reply within one business day.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brand footer-brand">
+          <span class="brand-mark brand-mark-light" aria-hidden="true"><span></span></span>
+          <span class="brand-name">KenKris Logistics</span>
+        </div>
+        <p class="footer-blurb">Customs brokerage, freight forwarding and trade training — your global cargo partner in Kenya.</p>
+      </div>
+      <div>
+        <h2 class="footer-head">Services</h2>
+        <ul class="footer-links">
+          <li><a href="#services">Customs Brokerage</a></li>
+          <li><a href="#services">Freight Forwarding</a></li>
+          <li><a href="#services">Cargo Handling</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-head">Company</h2>
+        <ul class="footer-links">
+          <li><a href="#advisory">Trade Training</a></li>
+          <li><a href="#coverage">Coverage</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="footer-head">Contact</h2>
+        <ul class="footer-links">
+          <li>{{ site.contact_address }}</li>
+          <li>{{ site.contact_phone }}</li>
+          <li><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {% now "Y" %} KenKris Logistics Limited. All rights reserved.</span>
+      <span>Nairobi, Kenya</span>
+    </div>
+  </div>
+</footer>
+{% endblock %}

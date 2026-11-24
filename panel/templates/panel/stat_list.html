@@ -1,0 +1,21 @@
+{% extends "panel/base.html" %}
+{% block title %}Stats{% endblock %}
+{% block heading %}Stats{% endblock %}
+{% block actions %}<a class="btn btn-primary btn-sm" href="{% url 'panel:stat_create' %}">+ New stat</a>{% endblock %}
+{% block content %}
+<p class="muted intro">These figures appear in the <b>Why KenKris</b> section. Ones marked “Banner” also show in the top banner under the headline.</p>
+{% if stats %}
+<div class="stat-cards">
+  {% for s in stats %}
+  <a class="stat-card" href="{% url 'panel:stat_edit' s.pk %}">
+    <span class="stat-pos mono">#{{ s.order }}</span>
+    <b>{{ s.value }}</b>
+    <span>{{ s.label }}</span>
+    {% if s.show_in_hero %}<span class="badge badge-new">Banner</span>{% endif %}
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty"><b>No stats yet.</b><p><a href="{% url 'panel:stat_create' %}">Add one</a></p></div>
+{% endif %}
+{% endblock %}

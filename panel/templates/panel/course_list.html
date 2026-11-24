@@ -1,0 +1,55 @@
+{% extends "panel/base.html" %}
+{% block title %}Courses{% endblock %}
+{% block heading %}Courses{% endblock %}
+{% block actions %}<a class="btn btn-primary btn-sm" href="{% url 'panel:course_create' %}">+ New course</a>{% endblock %}
+{% block content %}
+<p class="muted intro">The website's <b>Upcoming Courses</b> card shows the next 4 published courses. Past courses drop off automatically.</p>
+
+<h2 class="section-title">Upcoming</h2>
+{% if upcoming %}
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Date</th><th>Course</th><th>On website</th><th></th></tr></thead>
+    <tbody>
+      {% for c in upcoming %}
+      <tr class="row-link{% if not c.is_published %} is-muted{% endif %}">
+        <td class="nowrap mono" data-label="Date">{{ c.start_date|date:"D d M Y" }}</td>
+        <td data-label="Course"><a class="row-anchor" href="{% url 'panel:course_edit' c.pk %}">{{ c.name }}</a></td>
+        <td data-label="On website">
+          {% if not c.is_published %}<span class="badge badge-closed">Unpublished</span>
+          {% elif c in on_site %}<span class="badge badge-won">Showing</span>
+          {% else %}<span class="badge badge-contacted">Queued</span>{% endif %}
+        </td>
+        <td class="nowrap actions-cell"><a href="{% url 'panel:course_edit' c.pk %}">Edit</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty">
+  <b>No upcoming courses.</b>
+  <p>The website currently says “New course dates are coming soon”. <a href="{% url 'panel:course_create' %}">Add a course</a></p>
+</div>
+{% endif %}
+
+{% if past %}
+<details class="past">
+  <summary>Past courses ({{ past|length }})</summary>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Date</th><th>Course</th><th></th></tr></thead>
+      <tbody>
+        {% for c in past %}
+        <tr class="is-muted">
+          <td class="nowrap mono" data-label="Date">{{ c.start_date|date:"d M Y" }}</td>
+          <td data-label="Course">{{ c.name }}</td>
+          <td class="nowrap actions-cell"><a href="{% url 'panel:course_edit' c.pk %}">Edit / reschedule</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</details>
+{% endif %}
+{% endblock %}
