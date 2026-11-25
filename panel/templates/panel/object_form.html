@@ -1,6 +1,6 @@
 {% extends "panel/base.html" %}
 {% block title %}{% if creating %}New {{ noun }}{% else %}Edit {{ noun }}{% endif %}{% endblock %}
-{% block breadcrumb %}<a class="crumb" href="{% url list_url %}">← Back</a>{% endblock %}
+{% block breadcrumb %}<a href="{% url list_url %}">{{ noun|capfirst }}s</a><span class="sep">/</span><span>{% if creating %}New{% else %}Edit{% endif %}</span>{% endblock %}
 {% block heading %}{% if creating %}New {{ noun }}{% else %}Edit {{ noun }}{% endif %}{% endblock %}
 {% block content %}
 <section class="card narrow">

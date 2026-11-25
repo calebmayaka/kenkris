@@ -1,7 +1,9 @@
 {% extends "panel/base.html" %}
 {% block title %}Stats{% endblock %}
+{% block breadcrumb %}<span>Website</span><span class="sep">/</span><span>Stats</span>{% endblock %}
+{% block description %}<p class="desc">Headline figures shown on the website.</p>{% endblock %}
 {% block heading %}Stats{% endblock %}
-{% block actions %}<a class="btn btn-primary btn-sm" href="{% url 'panel:stat_create' %}">+ New stat</a>{% endblock %}
+{% block actions %}<a class="btn btn-primary btn-sm" href="{% url 'panel:stat_create' %}"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>New stat</a>{% endblock %}
 {% block content %}
 <p class="muted intro">These figures appear in the <b>Why KenKris</b> section. Ones marked “Banner” also show in the top banner under the headline.</p>
 {% if stats %}

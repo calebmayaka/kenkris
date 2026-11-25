@@ -1,7 +1,9 @@
 {% extends "panel/base.html" %}
 {% block title %}Courses{% endblock %}
+{% block breadcrumb %}<span>Website</span><span class="sep">/</span><span>Courses</span>{% endblock %}
+{% block description %}<p class="desc">Upcoming dates for the Trade &amp; Customs Academy.</p>{% endblock %}
 {% block heading %}Courses{% endblock %}
-{% block actions %}<a class="btn btn-primary btn-sm" href="{% url 'panel:course_create' %}">+ New course</a>{% endblock %}
+{% block actions %}<a class="btn btn-primary btn-sm" href="{% url 'panel:course_create' %}"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>New course</a>{% endblock %}
 {% block content %}
 <p class="muted intro">The website's <b>Upcoming Courses</b> card shows the next 4 published courses. Past courses drop off automatically.</p>
 

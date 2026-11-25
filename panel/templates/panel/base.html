@@ -6,69 +6,102 @@
   <meta name="robots" content="noindex, nofollow">
   <title>{% block title %}Admin{% endblock %} · KenKris Admin</title>
   <link rel="icon" href="{% static 'website/favicon.svg' %}" type="image/svg+xml">
+  <link rel="preload" href="{% static 'panel/fonts/geist-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'panel/panel.css' %}">
+  {# Apply the saved theme before first paint to avoid a flash. #}
+  <script>
+    (function () {
+      var pref = "system";
+      try { pref = localStorage.getItem("kk-theme") || "system"; } catch (e) {}
+      var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      if (dark) document.documentElement.classList.add("dark");
+    })();
+  </script>
+  <script src="{% static 'panel/panel.js' %}" defer></script>
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body>
+{% include "panel/_icons.html" %}
 {% block layout %}
-<div class="layout">
-  <aside class="sidebar">
-    <a class="side-brand" href="{% url 'panel:index' %}">
-      <span class="mark"><span></span></span>
-      <span><b>KenKris</b><small>Admin panel</small></span>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Sidebar">
+    <a class="org" href="{% url 'panel:index' %}">
+      <span class="org-mark" aria-hidden="true"><span></span></span>
+      <span><span class="org-name">KenKris Logistics</span><span class="org-sub">Admin panel</span></span>
     </a>
-    <nav class="side-nav" aria-label="Admin">
-      {% with url_name=request.resolver_match.url_name %}
-      <a href="{% url 'panel:inquiries' %}" class="{% if 'inquir' in url_name %}active{% endif %}">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H5.2L4 17.2V4zm0-2a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4z"/></svg>
-        Inquiries
-        {% if new_inquiry_count %}<span class="pill">{{ new_inquiry_count }}</span>{% endif %}
-      </a>
-      <span class="side-label">Website content</span>
-      <a href="{% url 'panel:courses' %}" class="{% if 'course' in url_name %}active{% endif %}">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 1 9l11 6 9-4.9V17h2V9L12 3zM5 13.2v4L12 21l7-3.8v-4L12 17l-7-3.8z"/></svg>
-        Courses
-      </a>
-      <a href="{% url 'panel:stats' %}" class="{% if 'stat' in url_name %}active{% endif %}">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16v2H4v-2zm1-9h3v7H5v-7zm5.5-5h3v12h-3V6zM16 2h3v16h-3V2z"/></svg>
-        Stats
-      </a>
-      {% if request.user.is_superuser %}
-      <a href="{% url 'panel:site_settings' %}" class="{% if url_name == 'site_settings' %}active{% endif %}">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.3 7.3 0 0 0-1.7-1L15 3h-4l-.4 2.9a7.3 7.3 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.3 7.3 0 0 0 1.7 1L11 21h4l.4-2.9a7.3 7.3 0 0 0 1.7-1l2.5 1 2-3.5-2.2-1.6zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
-        Site settings
-      </a>
-      <span class="side-label">Team</span>
-      <a href="{% url 'panel:users' %}" class="{% if 'user' in url_name %}active{% endif %}">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm-8 0a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm0 2c-2.3 0-7 1.2-7 3.5V19h7v-2.5c0-.9.4-2.4 2.4-3.4A11 11 0 0 0 8 13zm8 0c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4z"/></svg>
-        Users
-      </a>
-      {% endif %}
-      {% endwith %}
-    </nav>
-    <div class="side-foot">
-      <div class="who">
-        <b>{{ request.user.get_full_name|default:request.user.username }}</b>
-        <small>{% if request.user.is_superuser %}Administrator{% else %}Staff{% endif %}</small>
+    {% with url_name=request.resolver_match.url_name %}
+    <nav class="nav" aria-label="Main">
+      <div class="nav-group">
+        <a href="{% url 'panel:inquiries' %}" class="{% if 'inquir' in url_name %}active{% endif %}">
+          <svg class="i" aria-hidden="true"><use href="#i-inbox"/></svg>Inquiries
+          {% if new_inquiry_count %}<span class="count" title="{{ new_inquiry_count }} new">{{ new_inquiry_count }}</span>{% endif %}
+        </a>
       </div>
-      <a href="{% url 'panel:password_change' %}">Change password</a>
-      <a href="/" target="_blank" rel="noopener">View website ↗</a>
-      <form method="post" action="{% url 'panel:logout' %}">{% csrf_token %}<button type="submit" class="link-btn">Sign out</button></form>
+      <div class="nav-group">
+        <p class="nav-label">Website</p>
+        <a href="{% url 'panel:courses' %}" class="{% if 'course' in url_name %}active{% endif %}"><svg class="i" aria-hidden="true"><use href="#i-grad"/></svg>Courses</a>
+        <a href="{% url 'panel:stats' %}" class="{% if 'stat' in url_name %}active{% endif %}"><svg class="i" aria-hidden="true"><use href="#i-chart"/></svg>Stats</a>
+        {% if request.user.is_superuser %}
+        <a href="{% url 'panel:site_settings' %}" class="{% if url_name == 'site_settings' %}active{% endif %}"><svg class="i" aria-hidden="true"><use href="#i-settings"/></svg>Site settings</a>
+        {% endif %}
+      </div>
+      {% if request.user.is_superuser %}
+      <div class="nav-group">
+        <p class="nav-label">Team</p>
+        <a href="{% url 'panel:users' %}" class="{% if 'user' in url_name %}active{% endif %}"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>Users</a>
+      </div>
+      {% endif %}
+    </nav>
+    {% endwith %}
+    <div class="sidebar-foot">
+      <a href="/" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg>kenkrislogistics.co.ke</a>
     </div>
   </aside>
+  <div class="backdrop" data-nav-close></div>
 
-  <main class="main">
-    <header class="page-head">
-      <div>
-        {% block breadcrumb %}{% endblock %}
-        <h1>{% block heading %}{% endblock %}</h1>
-      </div>
-      <div class="page-actions">{% block actions %}{% endblock %}</div>
+  <div class="app-main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" type="button" data-nav-open aria-label="Open menu" aria-controls="sidebar"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
+      <nav class="crumbs" aria-label="Breadcrumb">{% block breadcrumb %}{% endblock %}</nav>
+      <a class="btn btn-ghost btn-sm" href="/" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-external"/></svg><span class="view-site-label">View website</span></a>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Toggle dark mode">
+        <svg class="i sun" aria-hidden="true"><use href="#i-moon"/></svg><svg class="i moon" aria-hidden="true"><use href="#i-sun"/></svg>
+      </button>
+      {% with full=request.user.get_full_name|default:request.user.username %}
+      <details class="dropdown" data-dropdown>
+        <summary aria-label="Account menu"><span class="avatar" aria-hidden="true">{{ full|slice:":1"|upper }}{% if request.user.last_name %}{{ request.user.last_name|slice:":1"|upper }}{% endif %}</span></summary>
+        <div class="dropdown-menu" role="menu">
+          <div class="dropdown-head"><b>{{ full }}</b><span>{{ request.user.email|default:request.user.username }} · {% if request.user.is_superuser %}Administrator{% else %}Staff{% endif %}</span></div>
+          <div class="dropdown-sep"></div>
+          <p class="dropdown-label">Theme</p>
+          <button type="button" class="dropdown-item" role="menuitemradio" data-theme-set="light"><svg class="i" aria-hidden="true"><use href="#i-sun"/></svg>Light<svg class="i check" aria-hidden="true"><use href="#i-check"/></svg></button>
+          <button type="button" class="dropdown-item" role="menuitemradio" data-theme-set="dark"><svg class="i" aria-hidden="true"><use href="#i-moon"/></svg>Dark<svg class="i check" aria-hidden="true"><use href="#i-check"/></svg></button>
+          <button type="button" class="dropdown-item" role="menuitemradio" data-theme-set="system"><svg class="i" aria-hidden="true"><use href="#i-monitor"/></svg>Match device<svg class="i check" aria-hidden="true"><use href="#i-check"/></svg></button>
+          <div class="dropdown-sep"></div>
+          <a class="dropdown-item" role="menuitem" href="{% url 'panel:password_change' %}"><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Change password</a>
+          <form method="post" action="{% url 'panel:logout' %}">{% csrf_token %}
+            <button type="submit" class="dropdown-item" role="menuitem"><svg class="i" aria-hidden="true"><use href="#i-logout"/></svg>Sign out</button>
+          </form>
+        </div>
+      </details>
+      {% endwith %}
     </header>
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}" role="status">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
-  </main>
+
+    <main class="content" id="main">
+      <div class="container">
+        <header class="page-head">
+          <div>
+            <h1>{% block heading %}{% endblock %}</h1>
+            {% block description %}{% endblock %}
+          </div>
+          <div class="page-actions">{% block actions %}{% endblock %}</div>
+        </header>
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="status">{{ message }}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
 </div>
 {% endblock %}
 </body>

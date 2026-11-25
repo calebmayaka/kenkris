@@ -1,6 +1,7 @@
 {% extends "panel/base.html" %}
 {% block title %}{{ inquiry.name }} · Inquiries{% endblock %}
-{% block breadcrumb %}<a class="crumb" href="{% url 'panel:inquiries' %}">← All inquiries</a>{% endblock %}
+{% block breadcrumb %}<a href="{% url 'panel:inquiries' %}">Inquiries</a><span class="sep">/</span><span>{{ inquiry.name }}</span>{% endblock %}
+{% block description %}<p class="desc">Received {{ inquiry.created_at|date:"d M Y, H:i" }}</p>{% endblock %}
 {% block heading %}{{ inquiry.name }}{% endblock %}
 {% block actions %}<span class="badge badge-{{ inquiry.status }}">{{ inquiry.get_status_display }}</span>{% endblock %}
 {% block content %}

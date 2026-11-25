@@ -1,6 +1,6 @@
 {% extends "panel/base.html" %}
 {% block title %}Delete {{ noun }}{% endblock %}
-{% block breadcrumb %}<a class="crumb" href="{% url list_url %}">← Back</a>{% endblock %}
+{% block breadcrumb %}<a href="{% url list_url %}">{{ noun|capfirst }}s</a><span class="sep">/</span><span>Delete</span>{% endblock %}
 {% block heading %}Delete {{ noun }}?{% endblock %}
 {% block content %}
 <section class="card narrow">
