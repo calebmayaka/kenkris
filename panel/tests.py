@@ -261,3 +261,27 @@ class FirstLoginPasswordTests(PanelTestCase):
         self._create_via_panel()
         self.client.post(reverse("panel:login"), {"username": "ken2", "password": PW})
         self.assertEqual(self.client.get("/").status_code, 200)
+
+
+class CaseInsensitiveUsernameTests(PanelTestCase):
+    def test_login_ignores_username_case(self):
+        for variant in ["CLERK", "Clerk", "clerk"]:
+            self.client.logout()
+            resp = self.client.post(reverse("panel:login"), {"username": variant, "password": PW})
+            self.assertEqual(resp.status_code, 302, variant)
+            self.assertEqual(int(self.client.session["_auth_user_id"]), self.staff.pk)
+
+    def test_wrong_password_still_rejected(self):
+        resp = self.client.post(reverse("panel:login"), {"username": "CLERK", "password": "nope"})
+        self.assertNotIn("_auth_user_id", self.client.session)
+        self.assertContains(resp, "Incorrect username or password")
+
+    def test_cannot_create_case_duplicate_username(self):
+        self.client.force_login(self.admin)
+        resp = self.client.post(reverse("panel:user_create"), {
+            "first_name": "C", "last_name": "L", "username": "Clerk", "email": "other@example.com",
+            "role": "staff", "password1": PW, "password2": PW,
+        })
+        self.assertEqual(resp.status_code, 400)
+        self.assertContains(resp, "already exists", status_code=400)
+        self.assertEqual(User.objects.filter(username__iexact="clerk").count(), 1)

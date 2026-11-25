@@ -61,6 +61,12 @@ class UserCreateForm(EmailUniqueMixin, UserCreationForm):
         # Django 5.1+ adds a "usable_password" toggle; every panel user needs a password.
         self.fields.pop("usable_password", None)
 
+    def clean_username(self):
+        username = super().clean_username()
+        if User.objects.filter(username__iexact=username).exists():
+            raise forms.ValidationError("A user with that username already exists.")
+        return username
+
     def save(self, commit=True):
         user = super().save(commit=False)
         apply_role(user, self.cleaned_data["role"])
